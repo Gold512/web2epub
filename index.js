@@ -3,22 +3,8 @@ import { JSDOM } from 'jsdom'
 import fetch from "node-fetch";
 import fs from 'fs'
 
-// == config ==
-let title = 'title';
-let author = '---';
-let publisher = '';
-let sources = {
+import {title, author, publisher, sources, contentSelector, verbose, threads, processHTML} from './config.js'
 
-};
-
-let contentSelector = '';
-let verbose = true;
-let threads = 3;
-
-let processHTML = null;
-
-
-// ==/config==
 let dir = 'output'
 if (!fs.existsSync(dir)){
     fs.mkdirSync(dir);
@@ -82,56 +68,3 @@ epub.render()
     .catch((err) => {
         console.error("Failed to generate Ebook because of ", err);
     });
-
-// chapter selector use $n for the index
-function chapterInRange(url, start, end) {
-    let result = {};
-    for(let i = start; i <= end; i++) {
-        result['Chapter ' + i] = url.replace('$n', i);
-    }
-    return result;
-}
-
-/** captures html between 2 elements with innerText of s */
-function contentBetween(s, fallBackToAll = false) {
-    return element => {
-        let result = '';
-        let collect = false;
-        let children = element.children;
-        
-        for(let i = 0; i < children.length; i++) {
-            const e = children[i];
-            
-            if(e.textContent.trim() === s) {
-                collect = !collect;
-                continue;
-            }
-
-            if(collect) result += e.outerHTML;
-        }
-
-        if(result === '' && fallBackToAll) return element.innerHTML;
-
-        return result;
-    }
-}
-
-/**
- * get slice of array of children of selected element
- * @param {*} start 
- * @param {*} end 
- */
-function sliceChildren(start, end) {
-    return element => {
-        let result = '';
-        let upperBound = end;
-        if(end < 0) upperBound += element.children.length;
-        
-        for(let i = start; i < upperBound; i++) {
-            const e = element.children[i]
-            result += e.outerHTML;
-        }
-
-        return result;
-    }
-}
