@@ -3,7 +3,7 @@ import { JSDOM } from 'jsdom'
 import fetch from "node-fetch";
 import fs from 'fs'
 
-import {title, author, publisher, sources, contentSelector, verbose, threads, processHTML} from './config.js'
+import {title, author, publisher, sources, contentSelector, verbose, threads, processHTML, cover} from './config.js'
 
 let dir = 'output'
 if (!fs.existsSync(dir)){
@@ -20,23 +20,25 @@ if(verbose) console.time(timetaken)
 let chapters = [];
 let queue = [];
 
-for(let i in sources) {
+for(let i = 0, k = Object.keys(sources); i < k.length; i++) {
     queue.push(new Promise(async resolve => {
-        let index = chapters.length;
+        const title = k[i];
+        const source = sources[k[i]]
+        const index = i;
 
-        if(verbose) console.log(`fetching '${i}' at ${sources[i]}`);
+        if(verbose) console.log(`[${index+1}/${k.length}] fetching '${title}' at ${source}`);
 
-        let text = await fetch(sources[i]);
+        let text = await fetch(source);
         text = await text.text();
         let dom = (await new JSDOM(text)).window.document;
         let mainContent = contentSelector ? dom.querySelector(contentSelector) : dom.body;
-        if(!mainContent) throw new Error('unable to get content from source ' + sources[i]);
+        if(!mainContent) throw new Error('unable to get content from source ' + source);
 
         let processed = processHTML ? processHTML(mainContent) : mainContent.innerHTML;
 
-        if(verbose) console.log(`Extracted ${processed.length} characters of HTML`)
+        if(verbose) console.log(`[${index+1}/${k.length}] Extracted ${processed.length} characters of HTML`)
 
-        chapters[index] = {title: i, data:processed};
+        chapters[index] = {title: title, data:processed};
 
         resolve();
     }));

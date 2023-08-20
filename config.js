@@ -1,4 +1,4 @@
-import {chapterInRange, contentBetween, sliceChildren} from './helper.js'
+import {chapterInRange, contentBetween, contentBetweenSelectors, sliceChildren} from './helper.js'
 
 // configure stuff here 
 
@@ -11,6 +11,8 @@ export const sources = {
 
 export const contentSelector = '';
 export const verbose = true;
-export const threads = 3;
+export const threads = 10;
+
+export const cover = null;
 
 export const processHTML = null;

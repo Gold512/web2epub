@@ -62,3 +62,43 @@ export function sliceChildren(start, end) {
         return result;
     }
 }
+
+/**
+ * Get the HTML between 2 selectors on the parent element, only works on direct children of element
+ * @param {string} selector1 query selector of first element
+ * @param {string} selector2 query selector of last element
+ * @param {boolean} [inclusive=false] whether to include the selected elements in the result
+ * @returns {string}
+ */
+export function contentBetweenSelectors(selector1, selector2, inclusive = false) {
+    return element => {
+        let result = '';
+        let children = element.children;
+        let collect = false;
+
+        let element1 = element.querySelector(selector1);
+        let element2 = element.querySelector(selector2);
+
+        for(let i = 0; i < children.length; i++) {
+            const e = children[i];
+
+            if(e === element1) {
+                collect = true;
+                if(inclusive) result += e.outerHTML;
+                continue;
+            }
+            
+            if(e === element2) {
+                collect = false;
+                if(inclusive) result += e.outerHTML;
+                continue;
+            }
+
+            if(collect) {
+                result += e.outerHTML;
+            }
+        }
+
+        return result;
+    }
+}
