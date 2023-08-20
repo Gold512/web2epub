@@ -6,7 +6,7 @@
  * @param {number} end 
  * @returns 
  */
-function chapterInRange(url, start, end) {
+export function chapterInRange(url, start, end) {
     let result = {};
     for(let i = start; i <= end; i++) {
         result['Chapter ' + i] = url.replace('$n', i);
@@ -20,7 +20,7 @@ function chapterInRange(url, start, end) {
  * @param {boolean} [fallBackToAll=false] if there is no text captured between s, dump the whole contents
  * @returns 
  */
-function contentBetween(s, fallBackToAll = false) {
+export function contentBetween(s, fallBackToAll = false) {
     return element => {
         let result = '';
         let collect = false;
@@ -48,7 +48,7 @@ function contentBetween(s, fallBackToAll = false) {
  * @param {*} start index of starting element
  * @param {*} end index of end element, non-inclusive. Negative values indicate indices starting from end of element list.
  */
-function sliceChildren(start, end) {
+export function sliceChildren(start, end) {
     return element => {
         let result = '';
         let upperBound = end;

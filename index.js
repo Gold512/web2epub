@@ -22,6 +22,8 @@ let queue = [];
 
 for(let i in sources) {
     queue.push(new Promise(async resolve => {
+        let index = chapters.length;
+
         if(verbose) console.log(`fetching '${i}' at ${sources[i]}`);
 
         let text = await fetch(sources[i]);
@@ -34,7 +36,7 @@ for(let i in sources) {
 
         if(verbose) console.log(`Extracted ${processed.length} characters of HTML`)
 
-        chapters.push({title: i, data:processed});
+        chapters[index] = {title: i, data:processed};
 
         resolve();
     }));
