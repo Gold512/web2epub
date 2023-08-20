@@ -3,7 +3,7 @@ import { JSDOM } from 'jsdom'
 import fetch from "node-fetch";
 import fs from 'fs'
 
-import {title, author, publisher, sources, contentSelector, verbose, threads, processHTML, cover} from './config.js'
+import {title, author, publisher, sources, contentSelector, verbose, threads, processHTML, cover, pageBreaks} from './config.js'
 
 let dir = 'output'
 if (!fs.existsSync(dir)){
@@ -38,6 +38,7 @@ for(let i = 0, k = Object.keys(sources); i < k.length; i++) {
 
         if(verbose) console.log(`[${index+1}/${k.length}] Extracted ${processed.length} characters of HTML`)
 
+        if(pageBreaks) processed += '<p style="page-break-before: always"></p>';
         chapters[index] = {title: title, data:processed};
 
         resolve();
@@ -62,7 +63,8 @@ const epub = new EPub({
     author: author,
     publisher: publisher,
     verbose: verbose,
-    content: chapters
+    content: chapters,
+    cover: cover
 }, `./output/${title}.epub`)
 
 epub.render()

@@ -16,3 +16,4 @@ export const threads = 10;
 export const cover = null;
 
 export const processHTML = null;
+export const pageBreaks = false;
